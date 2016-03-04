@@ -3,7 +3,7 @@
 ## Overview
 
 - Simple HTTP proxy written in node
-- Listens on `process.env.PORT`
+- Listens on `process.env.PORT` (default: `3000`)
 - Requests are passed to: `process.env.ORIGIN_HOST:process.env.ORIGIN_PORT`
 - Logs proxy requests and responses via [bunyan](https://github.com/trentm/node-bunyan)
 

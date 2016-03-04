@@ -1,0 +1,25 @@
+{
+  "name": "node-proxy",
+  "version": "1.0.0",
+  "description": "A Simple Node.js HTTP Proxy.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js | bunyan"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RunnableTest/node-proxy.git"
+  },
+  "author": "Ryan Sandor Richards <ryan@runnable.com> (http://www.runnable.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RunnableTest/node-proxy/issues"
+  },
+  "homepage": "https://github.com/RunnableTest/node-proxy#readme",
+  "dependencies": {
+    "bunyan": "^1.7.1",
+    "clone": "^1.0.2",
+    "loadenv": "^2.1.0",
+    "request": "^2.69.0"
+  }
+}
