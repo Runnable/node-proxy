@@ -16,6 +16,9 @@
 
 ## Container Environment
 ```
+# Host to the origin (content) server for the proxy
 ORIGIN_HOST=<elastic-host>
-ORIGIN_PORT=<elastic-port>
+
+# Port to of the origin server
+ORIGIN_PORT=<some-port>
 ```
