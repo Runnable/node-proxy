@@ -19,6 +19,7 @@
   "dependencies": {
     "bunyan": "^1.7.1",
     "clone": "^1.0.2",
+    "http-proxy": "^1.13.2",
     "loadenv": "^2.1.0",
     "request": "^2.69.0"
   }

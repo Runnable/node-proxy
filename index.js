@@ -3,12 +3,10 @@
 require('loadenv')()
 
 const bunyan = require('bunyan')
-const clone = require('clone')
-const http = require('http')
-const request = require('request')
+const httpProxy = require('http-proxy')
 
 // Logger for the proxy
-const logger = bunyan
+const log = bunyan
   .createLogger({
     name: 'node-http',
     streams: [{ level: process.env.LOG_LEVEL, stream: process.stdout }],
@@ -22,49 +20,20 @@ const logger = bunyan
     }
   })
 
-// Create and start the simple proxy server
-http.createServer(proxyRequest).listen(process.env.PORT, (err) => {
-  if (err) {
-    return log.fatal({ err: err }, 'Proxy failed to start')
-  }
-  logger.info(`node-proxy listening on ${process.env.PORT}`)
+const proxy = httpProxy.createProxyServer({
+  target: `http://${process.env.ORIGIN_HOST}:${process.env.ORIGIN_PORT}`
 })
 
-/**
- * Proxies request for the configured origin.
- */
-function proxyRequest (req, response) {
-  let headers = clone(req.headers)
-  headers.host = `${process.env.ORIGIN_HOST}:${process.env.ORIGIN_PORT}`
+proxy.listen(process.env.PORT)
 
-  const requestOptions = {
-    method: req.method,
-    headers: headers,
-    uri: [
-      'http://',
-      process.env.ORIGIN_HOST, ':', process.env.ORIGIN_PORT,
-      req.url
-    ].join('')
-  }
+proxy.on('proxyReq', function (req) {
+  log.info({ req: req }, 'Incoming Request')
+})
 
-  const log = logger.child({
-    method: req.method,
-    path: req.url,
-    headers: req.headers,
-    originRequest: requestOptions
+proxy.on('error', function (err, req, res) {
+  log.error(err.data || {}, err.message || 'An unknown error occured.')
+  res.writeHead(502, {
+    'Content-Type': 'text/plain'
   })
-
-  log.info(`Proxying ${req.method} ${req.url}`)
-
-  request(requestOptions, (err, originResponse, body) => {
-    if (err) {
-      log.error({ err: err }, 'Error when requesting from origin')
-      response.writeHead(502, {'Content-Type': 'text/plain'})
-      response.end('Error Requesting From Origin')
-      return
-    }
-    log.info({ status: originResponse.statusCode }, 'Response from origin')
-    response.writeHead(originResponse.statusCode, originResponse.headers)
-    response.end(body)
-  })
-}
+  res.end('Bad Gateway')
+})
