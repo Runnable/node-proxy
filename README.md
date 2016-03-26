@@ -23,4 +23,4 @@ ORIGIN_HOST=<elastic-host>
 ORIGIN_PORT=<some-port>
 ```
 
-no comments
+no additional comments
