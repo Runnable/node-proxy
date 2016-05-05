@@ -27,7 +27,7 @@ const proxy = httpProxy.createProxyServer({
 proxy.listen(process.env.PORT)
 
 proxy.on('proxyReq', function (req) {
-  log.info({ req: req }, 'Incoming Request')
+  log.info({ req: req }, 'BRANCH Request')
 })
 
 proxy.on('error', function (err, req, res) {
